@@ -1,0 +1,50 @@
+<!doctype html>
+<html> 
+	<head>
+	<!--
+		Matthew Doles
+		CGS3850
+		Project01
+		home.html
+	-->
+		<meta charset="UTF-8">    
+		<title>Project01</title>    
+	</head> 
+	<body> 
+		<script src="jquery-3.1.1.js"></script>	
+		<script> 
+		
+		$(document).ready(function(){ 
+			//Center align h1 & h3 headers in body
+			$('h1').css('text-align', 'center');
+			$('h3').css('text-align', 'center');
+			//Give the body a soft red background
+			$('body').css('background-color', '#FFC0c0');
+			//Set the dimesnsions of the image and center align under headers
+			$('img').css({
+				'width' : '650px',
+				'height' : '400px',
+				'display' : 'block',
+				'margin' : 'auto'
+			});
+			//Center align the button inside the div tag
+			$('div').css('text-align', 'center');
+			
+			$('h1').fadeIn("slow");
+		}); 
+		</script> 	
+		<!-- Page title header -->		
+		<h1>The State Capitals Quiz</h1>
+		<!-- Page information header -->
+		<h3>Answer each of the 5 questions by typing the correct Capital of each State.</h3>
+		<img src="united_states_map.png" />
+		<br/>
+		<!-- Submit button nested within a form; form action redirects user to quiz when clicked  -->
+		<form action="quiz.html">
+			<div>
+				<input type="submit" value="Start Quiz" />
+			</div>	
+		</form>
+	</body> 
+</html> 
+<!

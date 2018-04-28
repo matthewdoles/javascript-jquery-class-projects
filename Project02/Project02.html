@@ -1,0 +1,133 @@
+<!doctype html>
+<html> 
+	<head>
+	<!--
+		Matthew Doles
+		CGS3850
+		Project02.html
+	-->
+		<meta charset="UTF-8">    
+		<title>Project02</title>    
+	</head> 
+	<body> 
+		
+		<script src="jquery-3.1.1.js"></script>	
+		<script> 
+		
+			$(document).ready(function(){ 
+		
+				//Body CSS styles: Smaller width and centered
+				$('body').css('width', '1000px');
+				$('body').css('margin-left', 'auto');
+				$('body').css('margin-right', 'auto');
+		
+				//Header CSS Styles
+				//Center align text
+				$('.title').css('text-align', 'center ');	
+				//Float image to the right and inline with headers
+				$('#image').css('float', 'right ');
+				$('#image').css('display', 'inline-block ');
+				
+				//Horse riding image hover
+				$("#image").hover(function() {
+					//Show second image on hover
+					$("#image").attr('src', 'images/horse_riding_02.jpg'); 
+					}, function(){
+					//Revert to original image after hover
+					$("#image").attr('src', 'images/horse_riding_01.jpg');
+				});
+				
+				//Form submission click
+				$('#submit').click(function() { 
+					//Instantiate subtotal to 0
+					var subtotal = 0;        
+					
+					//If Clinton Anderson chekced add 80 dollars to subtotal
+					if ($('#clintonanderson').prop('checked')) {					
+						subtotal += 80;
+					} 
+					//If Chris Cox chekced add 75 dollars to subtotal
+					if ($('#chriscox').prop('checked')) {    
+						subtotal += 75;
+					} 
+					//If Julie Goodnight chekced add 90 dollars to subtotal
+					if ($('#juliegoodnight').prop('checked')) {    
+						subtotal += 90;
+					} 
+					
+					//Save the number stalls needed by participant
+					var stalls = $('#stalls').val();
+					//Multiply number stalls needed by 20
+					subtotal += (stalls * 20); 
+					
+					//Find tax total using 7% tax rate
+					var taxes = subtotal *.07;
+					
+					//Add taxes and subtotal together for total
+					var total = subtotal + taxes;
+					
+					//Display subtotal, taxes, and total in form using in currency format
+					$('input[name=subtotal]').val(subtotal.toFixed(2));                    
+					$('input[name=taxes]').val(taxes.toFixed(2));  
+					$('input[name=total]').val(total.toFixed(2));
+				});   
+				
+			}); 
+			
+		</script> 		
+		
+		<!-- Page header: titles and image -->
+		<header>
+			<img id="image" src="images/horse_riding_01.jpg" height="200" width="300" />
+			<h1 class="title">Horse Training Clinics</h1>
+			<h3 class="title">Welcome to the 2017 Sarasota Horse Clinics</h3>
+	    </header>
+		
+		<!-- Event info -->
+		<p>Date: March 11, 2017 </p>
+		<p>Time: 9am to 4 pm </p>
+		
+		<!-- Signup form -->
+		<form id="signup" name="signup" >
+		
+			<!-- Participant label and text input -->        
+			<label for="participant">Participant Name </label>    
+			<input type="text" id="participant" name="participant" required="true" title="Please enter your name"> <br/> <br/>
+			
+			<!-- Clinic label and checkboxes -->
+			<label>Select the clinic(s) you'll be participating in:</label> <br/><br/> 
+			<div>
+				<label for="clintonanderson">Clinton Anderson</label>			
+				<input type="checkbox" name="clintonanderson" id="clintonanderson" value="clintonanderson">&nbsp;&nbsp;&nbsp;  
+				<label for="chriscox">Chris Cox</label>      
+				<input type="checkbox" name="chriscox" id="chriscox" value="chriscox">&nbsp;&nbsp;&nbsp; 
+				<label for="juliegoodnight">Julie Goodnight</label> 
+				<input type="checkbox" name="juliegoodnight" id="juliegoodnight" value="juliegoodnight">   
+			</div>
+			<br/><br/>
+			
+			<!-- Stalls required label and text input -->
+			<label for="stalls">Number of stalls you'll need </label>  
+			<input type="text" id="stalls" name="stalls" size="5" required="true"  title="Please enter the nubmer of stalls needed">
+			<label for="stalls">($20 per stall)</label>  <br/> <br/>
+			
+			<!-- Subtotal label and disabled text input -->
+			<label for="subtotal">Subtotal</label>  
+			<input type="text" id="subtotal" name="subtotal" size="5" disabled></label> <br/><br/>   
+			
+			<!-- Taxes label and disabled text input -->
+			<label for="taxes">Taxes</label>&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="text" id="taxes" name="taxes" size="5" disabled></label> <br/><br/>   
+			
+			<!-- Total label and disabled text input -->
+			<label for="total">Total</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="text" id="total" name="total" size="5" disabled></label> <br/><br/>   
+			
+			<!-- Form submit button -->
+			<input type="button" id="submit" name ="submit" value ="Submit">    
+		</form>
+		
+	</body> 
+	
+</html> 
+<!

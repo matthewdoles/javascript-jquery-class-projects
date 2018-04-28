@@ -1,0 +1,575 @@
+<!doctype html>
+<html> 
+	<head>
+	<!--
+		Matthew Doles
+		CGS3850
+		Project03.html
+	-->
+		<meta charset="UTF-8">    
+		<title>Project03</title>    
+		
+		<link href="css/jquery-ui.min.css" rel="stylesheet">   
+		<script src="js/jquery-3.1.1.js"></script>   
+		<script src="js/jquery-ui.min.js"></script>
+		
+		<script>
+		
+			$(document).ready(function() {
+				
+				//Tabbed Panel for divison named id 'tab-container'
+				$("#tabContainer").tabs();
+				
+				//Accordion Control for divison named id 'accordionCtrl'
+				$("#accordionCtrl").accordion({
+					//Have no active div on page load
+					active: false ,  
+					//Make div's collapsible
+					collapsible: true, 
+					//Make the height of each div equal to its content size on expansion
+					heightStyle: "content"
+				});
+				
+				//CSS for page body
+				$('body').css({
+					
+					'width' : '850px',
+					'margin' : 'auto',
+					'padding-top' : '20px',
+					'background-color' : '#003c60'
+				});
+				
+				
+				//HOME 
+				
+				//CSS for all elements on the Home tab with the specified class
+				$('.home').css({
+					'display': 'inline-block',
+					'vertical-align' : 'top',
+				});
+				//CSS for all images on the Home tab with the specified class
+				$('img.home').css({
+					'border' : '3px solid black', 
+					'margin-left' : '100px',
+					'margin-bottom' : '15px'								
+				});
+				//CSS for all paragraphs on the Home tab with the specified class
+				$('p.home').css({
+					'width' : '350',
+				});
+				
+				
+				//CAPITALS QUIZ
+				
+				//Array variable storing quiz questions
+				var questions = ['What is the capital of Florida?',
+								 'What is the capital of Georgia?', 
+								 'What is the capital of Colorado?',
+								 'What is the capital of New York?',
+								 'What is the capital of Rhode Island?'];
+								 
+				//Array variable storing quiz answers in a correlated order
+				var answers = ['Tallahassee', 'Atlanta', 'Denver', 'Albany', 'Providence'];
+				
+				//Integer variable for indexing purposes
+				var index = 0;
+				//Integer variable incremented when user answers question correctly
+				var correct = 0;
+				
+				//Instantiate question number and question in their specified elements
+				$("#questionNumber").text("Question  " + (index + 1) + " out of 5");				
+				$("#question").text(questions[index]);
+			
+				//Handle on click event for the next button
+				$("#next").click(function(){
+					
+					//Capture the users text input answer
+					var userAnswer = $('#userAnswer').val();
+					
+					//Determine if captured answer is equal to the correct stored value
+					if (userAnswer === answers[index]) {
+						//Increment total if answer is correct
+						correct++;
+					}
+					
+					//After handling input, set up page to prompt next question
+					
+					//Increment index
+					index++;
+					//Delete users text input
+					$('#userAnswer').val(""); 
+					
+					//Determine if quiz is completed or not
+					if (index < 5) {
+						//If not completed, display next question number and question
+						$("#questionNumber").text("Question  " + (index + 1) + " out of 5");				
+						$("#question").text(questions[index]);
+					}
+					else {
+						//If completed, prompt quiz completion and correct total guesses
+						$("#questionNumber").text("Quiz Completed!");				
+						$("#question").text("You got " + correct + " out of 5 correct.");
+						
+						//Hide input text; no longer needed
+						$("#userAnswer").hide();
+						//Disable next button
+						$(this).prop("disabled", true);
+					}			
+					
+				}); 
+				
+				//Handle on click event for the reset quiz button
+				$("#resetQuiz").click(function(){
+					
+					//Re-instantiate index and number correct back to 0
+					index = 0;
+					correct = 0;
+					
+					//Prompt original question number and question 
+					$("#questionNumber").text("Question  " + (index + 1) + " out of 5");				
+					$("#question").text(questions[index]);
+					
+					//Re-enable input text and next button if reset was after quiz completion
+					$("#userAnswer").show();
+					$("#next").prop("disabled", false);
+				
+				});
+			
+			
+				//DRAG AND DROP STATE MATCHING
+				
+				//CSS for gameContainer div; display inline-block with state names table
+				$('#gameContainer').css({
+					'display' : 'inline-block',
+				});
+				//CSS for table holding state names
+				$('#stateNames').css({
+					'display' : 'inline-block',
+					'border-collapse' : 'collapse'
+				});
+				//CSS for table data cells in the table holding state names
+				$('#stateNames td').css({
+					'border' : '3px solid Black',
+					'text-align' : 'center',
+					'height' : '200px',
+					'width' : '200px',
+					'padding-top' : '.25em',
+					'padding-bottom': '.25em',
+					'background-color' : '#ef5f5f'
+					
+				});
+				
+				//Array storing the correct order of states 
+				var answerStates = ['IND', 'MIN', 'OHI', 'ORE', 'DEL', 'CAL'];
+				var anserwString = ['IND', 'MIN', 'OHI', 'ORE', 'DEL', 'CAL'].join('');
+				
+				function coordinates(event, ui) {
+					console.log(ui.position);
+				}
+				
+				//gameContainer sortable function
+				$('#gameContainer').sortable({
+					cursor: 'pointer',
+					axis: 'y',
+					stop: function(event, ui) {
+						//Stop sortable when all the correct state images are 
+						//matched with their corresponding state names
+						
+						//Store current sorted order of IDs after an image is drag and dropped;
+						//joined together as one long string
+						var currentOrder = $(this).sortable("toArray").join('');
+						
+						//When that string is equal to the correct order (anserwString)...
+						if (currentOrder == anserwString) {
+							//...disable sorting
+							$(this).sortable("disable");
+						}
+					},
+					update: function( event, ui ) {
+						//Update function that displays a table cells background in green when 
+						//placed in correct position, and in red when incorrect
+						
+						//Store current array list in temporary variable
+						var sortedIDs = $(this).sortable("toArray").join('');
+						//See if each 3 character substring is equal to the correct corresponding index
+						if (sortedIDs.substring(0, 3) == answerStates[0]) {
+							//If in correct position, change background color to green
+							$('#tdIND').css('background-color', '#61d85b');
+						}
+						else {
+							//When not, change background color to red
+							$('#tdIND').css('background-color', '#ef5f5f');
+						}
+						//Repeat for every substring in increments of 3
+						if (sortedIDs.substring(3, 6) ==  answerStates[1]) {
+							$('#tdMIN').css('background-color', '#61d85b');
+						}
+						else {
+							$('#tdMIN').css('background-color', '#ef5f5f');
+						}
+						if (sortedIDs.substring(6, 9) == answerStates[2]) {
+							$('#tdOHI').css('background-color', '#61d85b');
+						}
+						else {
+							$('#tdOHI').css('background-color', '#ef5f5f');
+						}
+						if (sortedIDs.substring(9, 12) ==  answerStates[3]) {
+							$('#tdORE').css('background-color', '#61d85b');
+						}
+						else {
+							$('#tdORE').css('background-color', '#ef5f5f');
+						}
+						if (sortedIDs.substring(12, 15) ==  answerStates[4]) {
+							$('#tdDEL').css('background-color', '#61d85b');
+						}
+						else {
+							$('#tdDEL').css('background-color', '#ef5f5f');
+						}
+						if (sortedIDs.substring(15, 18) == answerStates[5]) {
+							$('#tdCAL').css('background-color', '#61d85b');
+						}
+						else {
+							$('#tdCAL').css('background-color', '#ef5f5f');
+						}
+					}
+				});
+						
+
+				//REGIONS OF THE UNITED STATES
+				
+				//CSS for ul lists of all the states
+				$('ul').css({
+					'display' : 'inline-block',
+					'list-style-type' : 'none',
+					'vertical-align' : 'top'
+				});
+				
+				//Array variable storing the correct state abbreviations for each region
+				var northeast = ['CT', 'ME', 'MA', 'NH', 'RI', 'VT', 'DE', 'NJ', 'NY', 'PA'];
+				var midwest = ['IL', 'IN', 'MI', 'OH', 'WI', 'IA', 'KS', 'MN', 'MS', 'NE', 'ND', 'SD'];
+				var south = ['FL', 'GA', 'MD', 'NC', 'SC', 'VA', 'WV', 'AL', 'KY', 'MS', 'TN', 'AK', 'LA', 'OK', 'TX'];
+				var west = ['AZ', 'CO', 'ID', 'MT', 'NV', 'NM', 'UT', 'WY', 'AK', 'CA', 'HI', 'OR', 'WA'];
+				
+				//On page load, the selected region is 1 (Northeast)
+				var selectedRegion = 1;
+				
+				//Instantiate text prompting user instructions
+				$("#regions").text('Identify all the states in the selected region.');
+				
+				//Handle click event when a radio button is clicked (region changed)
+				$("input[type='radio']").click(function(){
+					
+					//Retrieve the previous value 
+					var previousValue = $(this).attr('previousValue');
+					//Un-check that value and no longer make it the previous value
+					$(this).removeAttr('checked');
+					$(this).attr('previousValue', false);
+					
+					//Retrieve the value of newly selected radio button
+					var selected = $(this).val();
+					
+					//Possible selections: Northeast - 1, Midwest - 2, South - 3, West - 4
+					
+					//For loop to determine which region has been selected
+					for (var i = 1; i < 5; i++) {
+						if (selected == i) {
+							selectedRegion = i;
+						}
+					}
+					
+					//Un-check all checkboxes when new region is selected
+					$('input[type=checkbox]').each(function (){
+						$(this).prop('checked', false);
+					});
+				});          
+
+				
+				//Handle on click event for submit button
+				$("#submit").click(function(){
+					
+					//Variable to hold all selected checkbox values
+					var checked = "";
+					//Variable to hold number of correct guesses
+					var correct = 0;
+					
+					//Retrieve user's input (selected checkboxes)
+					$('input[type=checkbox]').each(function () {
+						//For each checkbox, if selected
+						if (this.checked) {
+							//Append to checked string; seperate by comma
+							checked += $(this).val() + ", ";
+						}
+					});
+					
+					//Determine results based on the currently selected region
+					
+					//NORTHEAST
+					if (selectedRegion == 1){
+						//Loop through every index of the northeast array
+						for (var i = 0; i < northeast.length; i++) {
+							//Determine if checked string contains the current index value in norhteast
+							if (checked.search(northeast[i]) != -1) {
+								//Increment correct if match found
+								correct++;
+							}
+						}
+						
+						//Display number of correct guesses
+						//If number correct equal number posssible, append 'Congrats' message.
+						if (correct == northeast.length) {
+							$("#regions").text("You got " + correct + " out of " + (northeast.length) + " correct. Congratulations!");	
+						}
+						//If number correct does not equal number posssible, append 'Try again' message.
+						else {
+							$("#regions").text("You got " + correct + " out of " + (northeast.length) + " correct. Please try again or select a new region.");	
+						}
+					}
+					//MIDWEST
+					else if (selectedRegion == 2){
+						//Loop through every index of the midwest array
+						for (var i = 0; i < midwest.length; i++) {
+							//Determine if checked string contains the current index value in midwest
+							if (checked.search(midwest[i]) != -1) {
+								//Increment correct if match found
+								correct++;
+							}
+						}
+						
+						//Display number of correct guesses
+						//If number correct equal number posssible, append 'Congrats' message.
+						if (correct == midwest.length) {
+							$("#regions").text("You got " + correct + " out of " + (midwest.length) + " correct. Congratulations!");	
+						}
+						//If number correct does not equal number posssible, append 'Try again' message.
+						else {
+							$("#regions").text("You got " + correct + " out of " + (midwest.length) + " correct. Please try again or select a new region.");	
+						}
+					}
+					//SOUTH
+					else if (selectedRegion == 3){
+						//Loop through every index of the south array
+						for (var i = 0; i < south.length; i++) {
+							//Determine if checked string contains the current index value in south
+							if (checked.search(south[i]) != -1) {
+								//Increment correct if match found
+								correct++;
+							}
+						}
+						
+						//Display number of correct guesses
+						//If number correct equal number posssible, append 'Congrats' message.
+						if (correct == south.length) {
+							$("#regions").text("You got " + correct + " out of " + (south.length) + " correct. Congratulations!");	
+						}
+						//If number correct does not equal number posssible, append 'Try again' message.
+						else {
+							$("#regions").text("You got " + correct + " out of " + (south.length) + " correct. Please try again or select a new region.");	
+						}
+					}
+					//WEST
+					else if (selectedRegion == 4){
+						//Loop through every index of the midwest west
+						for (var i = 0; i < west.length; i++) {
+							//Determine if checked string contains the current index value in west
+							if (checked.search(west[i]) != -1) {
+								//Increment correct if match found
+								correct++;
+							}
+						}
+						
+						//Display number of correct guesses
+						//If number correct equal number posssible, append 'Congrats' message.
+						if (correct == west.length) {
+							$("#regions").text("You got " + correct + " out of " + (west.length) + " correct. Congratulations!");	
+						}
+						//If number correct does not equal number posssible, append 'Try again' message.
+						else {
+							$("#regions").text("You got " + correct + " out of " + (west.length) + " correct. Please try again or select a new region.");	
+						}	
+					}			
+				});
+				
+				//Handle on click event for reset regions button
+				$("#resetRegions").click(function(){
+					
+					//Un-check all checkboxes
+					$('input[type=checkbox]').each(function (){
+						$(this).prop('checked', false);
+					});
+					//Re-instantiate text prompting user instructions
+					$("#regions").text('Identify all the states in the selected region.');
+				
+				});						
+			});
+		</script>
+	</head> 
+	<body> 
+		<!-- Division for tabbed panel -->
+		<div id="tabContainer">
+			<!-- Create tabs using unordered lists  -->
+			<ul>
+				<li><a href="#home">Home</a></li>
+				<li><a href="#contact">Contact</a></li>
+			</ul>
+			<!-- Home Tab  -->
+			<div id="home">
+				<!-- Describe site's purpose and operations -->
+				<h3>Welcome to the United States Geography Quiz Application</h3>
+				<p class="home">This application serves to help you garner a better understnading of the Geography 
+				of the United States through an easy to use, and intuitive user interface. The site currently offers
+				three tools you can use to test your knowledge: The Capitals Quiz, Drag and Drop State Matching, and the 
+				Regions of the United States. The instructions of each of these can be found when clicked on below. 
+				</p>
+				<img class="home" src="images/map_of_united_states.gif" height="225" width="300"/>
+			</div>
+			<!-- Contact Tab  -->
+			<div id="contact">
+				<!-- Simple Contact Information  -->
+				<p>This application was developed by Matthew Doles.</p>
+				<p><strong>Email:</strong> medoles@mail.usf.edu</p>
+				<p><strong>Phone:</strong> 317-560-1964</p>
+			</div>
+		</div>
+		
+		<!-- Division for accordion -->
+		<div id="accordionCtrl">
+			<!-- Header and Division for Capitals Quiz -->
+			<h3>Capitals Quiz</h3>
+			<div>
+				<h4>Do you know your state capitals?</h4>
+				<!-- Blank text elements, dynamically changes in script -->
+				<h4 id="questionNumber"></h4>
+				<p id="question"></p>
+				<!-- Input Text for user's quiz answer -->
+				<input type="text" id="userAnswer" width="250"> <br/><br/>
+				<!-- Quiz Buttons - Display side by side -->
+				<button type="button" id="next">Next</button>&nbsp;&nbsp;
+				<button type="button" id="resetQuiz">Reset</button>				 
+			</div>
+			<!-- Header and Division for Drag and Drop State Matching -->
+			<h3>Drag and Drop State Matching</h3>
+			<div>
+				<h4>Do you know your state shapes?</h4>
+				<p>Drag and drop the state shape to it's correlated state name.</p>
+				
+				<div id="gameContainer">
+					<!-- State images organized in incorrect order -->
+					<div id="ORE"><img src="images/oregon.png" height="200" width="200"></div>
+					<div id="OHI"><img src="images/ohio.png" height="200" width="200"></div>
+					<div id="DEL"><img src="images/delaware.png" height="200" width="200"></div>
+					<div id="CAL"><img src="images/california.png" height="200" width="200"></div>
+					<div id="IND"><img src="images/indiana.png" height="200" width="200"></div>
+					<div id="MIN"><img src="images/minnesota.png" height="200" width="200"></div>
+				</div>
+				
+				<!-- State names table - Order in which state images are to be organized -->
+				<table id="stateNames"> 
+					<colgroup>
+						<col span="1" />
+					</colgroup>
+					<tr>
+						<td id="tdIND">Indiana</td>
+					</tr>
+					<tr>
+						<td id="tdMIN">Minnesota</td>
+					</tr>
+					<tr>
+						<td id="tdOHI">Ohio</td>
+					</tr>
+					<tr>
+						<td id="tdORE">Oregon</td>
+					</tr>
+					<tr>
+						<td id="tdDEL">Delaware</td>
+					</tr>
+					<tr>
+						<td id="tdCAL">California</td>
+					</tr>
+				</table>
+
+			</div>
+			<!-- Header and Division for Regions of the United States -->
+			<h3>Regions of the United States</h3>
+			<div>
+				<h4>Do you know the regional divisions of the United States?</h4>
+				<!-- Blank paragraph elements, dynamically changes in script -->
+				<p id="regions"></p>
+				
+				<!-- Radio Buttons - One for each region -->
+				<input type="radio" name="region" value="1" checked> Northeast
+				<input type="radio" name="region" value="2"> Midwest
+				<input type="radio" name="region" value="3"> South
+				<input type="radio" name="region" value="4"> West</br>
+				
+				<!-- Unordered lists of all 50 states alphabetically -->
+				<ul>
+					<li><input type="checkbox" value="AL"> Alabama</li>
+					<li><input type="checkbox" value="AK"> Alaska</li>
+					<li><input type="checkbox" value="AZ"> Arkansa</li>
+					<li><input type="checkbox" value="AR"> Arizona</li>
+					<li><input type="checkbox" value="CA"> California</li>
+					<li><input type="checkbox" value="CO"> Colorado</li>
+					<li><input type="checkbox" value="CT"> Connecticut</li>
+					<li><input type="checkbox" value="DE"> Delaware</li>
+					<li><input type="checkbox" value="FL"> Florida</li>
+					<li><input type="checkbox" value="GA"> Georgia</li>
+					<li><input type="checkbox" value="HI"> Hawaii</li>
+					<li><input type="checkbox" value="ID"> Idaho</li>
+					<li><input type="checkbox" value="IL"> Illinois</li>
+					<li><input type="checkbox" value="IN"> Indiana</li>
+					<li><input type="checkbox" value="IA"> Iowa</li>
+				</ul>
+				<ul>
+					<li><input type="checkbox" value="KS"> Kansas</li>
+					<li><input type="checkbox" value="KY"> Kentucky</li>
+					<li><input type="checkbox" value="LA"> Louisiana</li>
+					<li><input type="checkbox" value="ME"> Maine</li>
+					<li><input type="checkbox" value="MD"> Maryland</li>
+					<li><input type="checkbox" value="MA"> Massachusetts</li>
+					<li><input type="checkbox" value="MI"> Michigan</li>
+					<li><input type="checkbox" value="MN"> Minnesota</li>
+					<li><input type="checkbox" value="MS"> Mississippi</li>
+					<li><input type="checkbox" value="MO"> Missouri</li>
+					<li><input type="checkbox" value="MT"> Montana</li>
+					<li><input type="checkbox" value="NE"> Nebraska</li>
+					<li><input type="checkbox" value="NV"> Nevada</li>
+					<li><input type="checkbox" value="NH"> New Hampshire</li>
+					<li><input type="checkbox" value="NJ"> New Jersey</li>
+				</ul>
+				<ul>
+					<li><input type="checkbox" value="NM"> New Mexico</li>
+					<li><input type="checkbox" value="NY"> New York</li>
+					<li><input type="checkbox" value="NC"> North Carolina</li>
+					<li><input type="checkbox" value="ND"> North Dakota</li>
+					<li><input type="checkbox" value="OH"> Ohio</li>
+					<li><input type="checkbox" value="OK"> Oklahoma</li>
+					<li><input type="checkbox" value="OR"> Oregon</li>
+					<li><input type="checkbox" value="PA"> Pennsylvania</li>
+					<li><input type="checkbox" value="RI"> Rhode Island</li>
+					<li><input type="checkbox" value="SC"> South Carolina</li>
+					<li><input type="checkbox" value="SD"> South Dakota</li>
+					<li><input type="checkbox" value="TN"> Tennessee</li>
+					<li><input type="checkbox" value="TX"> Texas</li>
+					<li><input type="checkbox" value="UT"> Utah</li>
+					<li><input type="checkbox" value="VT"> Vermont</li>
+				</ul>
+				<ul>
+					<li><input type="checkbox" value="VA"> Virginia</li>
+					<li><input type="checkbox" value="WA"> Washington</li>
+					<li><input type="checkbox" value="WV"> West Virginia</li>
+					<li><input type="checkbox" value="WI"> Wisconsin</li>
+					<li><input type="checkbox" value="WY"> Wyoming</li>
+				</ul>
+				
+				</br></br>
+				
+				<!-- Region Buttons - Display side by side -->
+				<button type="button" id="submit">Submit</button> &nbsp;&nbsp;
+				<button type="button" id="resetRegions">Reset</button>
+				
+			</div>
+		</div>
+	</body> 
+	
+</html> 
+<!

@@ -1,0 +1,61 @@
+<!doctype html>
+<html> 
+	<head>
+	<!--
+		Matthew Doles
+		CGS3850
+		Project01
+		quiz.html
+	-->
+		<meta charset="UTF-8">    
+		<title>Project01</title>    
+	</head> 
+	<body> 
+
+		<br/>
+		<!-- Page header giving user instructions -->
+		<h1>Type the correct capital name for the corresponding state to answer the question</h1>
+		<br/>
+		<hr/>
+		<h3>Feedback:</h3>
+		
+		<script type="text/javascript"> 
+			
+			//Array variable storing quiz questions
+			var questions = ['What is the capital of Florida?',
+							 'What is the capital of Georgia?', 
+							 'What is the capital of Colorado?',
+							 'What is the capital of New York?',
+							 'What is the capital of Rhode Island?'];
+							 
+			//Array variable storing quiz answers in a correlated order
+			var answers = ['Tallahassee', 'Atlanta', 'Denver', 'Albany', 'Providence'];
+			
+			//Integer variable incremented when user answers question correctly
+			var correct = 0;
+			
+			//Loop through all quiz questions independently 
+			for (i = 0; i < questions.length; i++) {
+			
+				//for loop iteration determines question to be asked
+				var userAnswer =  prompt(questions[i]); 
+				
+				//Correct when the user input is the same as the questoin's correlated answer
+				if (userAnswer == answers[i]) {
+					//Write page header showing user is correct
+					document.write('<h3>Correct!</h3>');   
+					//Increment correct counter
+					correct++;
+				}
+				else {
+					//When user input incorrect, write page header showing correct answer
+					document.write('<h3>Incorrect. The capital is ' + answers[i] + ".</h3>");   
+				}
+			}
+			//After quiz completion, determine and show number of questoins correctly answered by user
+			document.write("<h3>Number of correct responses: " + correct + "</h3>");
+		
+		</script> 				
+	</body> 
+</html> 
+<!
